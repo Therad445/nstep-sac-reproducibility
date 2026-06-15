@@ -1,0 +1,546 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+  11pt,
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+  \setmainfont[]{DejaVu Sans}
+  \setsansfont[]{DejaVu Sans}
+  \setmonofont[]{DejaVu Sans Mono}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[a4paper,margin=2.15cm]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\newenvironment{Shaded}{}{}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{#1}}
+\newcommand{\ImportTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{\textbf{#1}}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+\ifLuaTeX
+\usepackage[bidi=basic]{babel}
+\else
+\usepackage[bidi=default]{babel}
+\fi
+\babelprovide[main,import]{american}
+\ifPDFTeX
+\else
+\babelfont{rm}[]{DejaVu Sans}
+\fi
+% get rid of language-specific shorthands (see #6817):
+\let\LanguageShortHands\languageshorthands
+\def\languageshorthands#1{}
+% Custom LaTeX styling for the n-step SAC project report.
+% Included with: pandoc ... -H paper/latex/preamble.tex
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{caption}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage[most]{tcolorbox}
+
+\definecolor{MTCred}{HTML}{E30613}
+\definecolor{DeepText}{HTML}{202124}
+\definecolor{SoftGray}{HTML}{666A73}
+\definecolor{PaleLavender}{HTML}{F4F0FA}
+\definecolor{PaleBlue}{HTML}{EEF6FF}
+\definecolor{CodeBg}{HTML}{F6F7F9}
+\definecolor{RuleGray}{HTML}{D9DDE7}
+
+\AtBeginDocument{\hypersetup{
+  colorlinks=true,
+  linkcolor=MTCred,
+  urlcolor=MTCred,
+  citecolor=MTCred,
+  pdfborder={0 0 0}
+}}
+
+\captionsetup{font=small, labelfont=bf, labelsep=period}
+\setlist[itemize]{leftmargin=1.4em, itemsep=0.25em, topsep=0.25em}
+\setlist[enumerate]{leftmargin=1.6em, itemsep=0.25em, topsep=0.25em}
+
+\titleformat{\section}
+  {\Large\bfseries\sffamily\color{DeepText}}
+  {\thesection}{0.6em}{}
+\titleformat{\subsection}
+  {\large\bfseries\sffamily\color{DeepText}}
+  {\thesubsection}{0.6em}{}
+\titlespacing*{\section}{0pt}{1.4em}{0.55em}
+\titlespacing*{\subsection}{0pt}{1.0em}{0.35em}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small\sffamily n-step SAC final project}
+\rhead{\small\sffamily Radmir I.}
+\cfoot{\small\sffamily\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\newtcolorbox{keybox}{
+  colback=PaleLavender,
+  colframe=MTCred,
+  boxrule=0.8pt,
+  arc=2mm,
+  left=2.5mm,
+  right=2.5mm,
+  top=2mm,
+  bottom=2mm,
+  fontupper=\small
+}
+
+\newtcolorbox{resultbox}{
+  colback=PaleBlue,
+  colframe=RuleGray,
+  boxrule=0.5pt,
+  arc=2mm,
+  left=2.5mm,
+  right=2.5mm,
+  top=2mm,
+  bottom=2mm,
+  fontupper=\small
+}
+
+\newtcolorbox{warningbox}{
+  colback=CodeBg,
+  colframe=SoftGray,
+  boxrule=0.5pt,
+  arc=2mm,
+  left=2.5mm,
+  right=2.5mm,
+  top=2mm,
+  bottom=2mm,
+  fontupper=\small
+}
+
+\renewcommand{\arraystretch}{1.18}
+\setlength{\parskip}{0.45em}
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{3em}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Stress-Testing n-step Soft Actor-Critic under Limited Compute},
+  pdfauthor={Radmir I.},
+  pdflang={en-US},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Stress-Testing n-step Soft Actor-Critic under Limited Compute}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{Final RL Project Report}
+\author{Radmir I.}
+\date{2026}
+
+\begin{document}
+\maketitle
+
+\renewcommand*\contentsname{Contents}
+{
+\setcounter{tocdepth}{3}
+\tableofcontents
+}
+\begin{keybox}
+\textbf{Short version.} This project tests one central mechanism behind recent n-step SAC work: whether replacing the standard 1-step critic target with an n-step target helps Soft Actor-Critic under a limited compute budget. The main result on \texttt{HalfCheetah-v5}: \texttt{n=3} improved learning compared with the 1-step baseline, while \texttt{n=5} failed under the same hyperparameters. The main conclusion is that the n-step horizon is a stability parameter, not a simple bigger-is-better knob.
+\end{keybox}
+
+\section{Abstract}\label{abstract}
+
+This project studies a compact n-step modification of Soft Actor-Critic
+(SAC) under a limited compute budget. The main question is whether
+replacing the standard 1-step critic target with n-step targets improves
+sample efficiency in continuous-control tasks, and where the horizon
+becomes unstable. I implement a configurable n-step buffer before the
+replay buffer and compare SAC with \texttt{n=1}, \texttt{n=3}, and
+\texttt{n=5}. The experiments include \texttt{Pendulum-v1} as a sanity
+check and \texttt{HalfCheetah-v5} as the main benchmark. On
+\texttt{HalfCheetah-v5}, \texttt{n=3} reaches the best final return,
+while \texttt{n=5} fails to learn a strong running policy under the same
+hyperparameters. The result suggests that n-step credit assignment can
+help SAC, but the horizon is a stability parameter rather than a simple
+bigger-is-better knob.
+
+\section{Introduction}\label{introduction}
+
+Soft Actor-Critic (SAC) is a strong off-policy actor-critic algorithm
+for continuous-control tasks. In the standard setup, the critic is
+usually trained with a one-step temporal-difference target. This target
+is stable and simple, but reward information is propagated backward only
+one step at a time.
+
+N-step returns propose a more aggressive alternative: accumulate several
+rewards before bootstrapping. This can improve credit assignment,
+especially when a useful action affects reward only after several
+environment steps. However, in off-policy learning this is not free.
+Longer fragments sampled from the replay buffer may have been generated
+by older policies, which can increase off-policy bias and target
+variance.
+
+For this reason, the project does not try to claim a new
+state-of-the-art algorithm. Instead, it isolates one mechanism - the
+critic target horizon - and tests it in a small, reproducible
+experiment.
+
+\section{Research question}\label{research-question}
+
+The main research question is:
+
+\begin{quote}
+Do n-step returns improve SAC under limited compute, and how sensitive
+is the result to the chosen horizon?
+\end{quote}
+
+The project compares three variants:
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule\noalign{}
+Method & Description \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+SAC n=1 & standard 1-step SAC baseline \\
+SAC n=3 & SAC with a moderate 3-step target \\
+SAC n=5 & SAC with a longer and riskier 5-step target \\
+\end{longtable}
+
+The goal is not to prove that one horizon is universally optimal. The
+goal is to check whether the expected trade-off appears in a compact and
+reproducible setting.
+
+\section{Literature context}\label{literature-context}
+
+The project sits between standard SAC and recent n-step or
+sequence-aware SAC variants.
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{SAC} is the baseline off-policy actor-critic method with
+  entropy regularization, twin critics, target networks, and a replay
+  buffer.
+\item
+  \textbf{SACn} is important as a direction that focuses on the
+  difficulty of using n-step returns in off-policy SAC and motivates
+  stabilization or correction mechanisms.
+\item
+  \textbf{T-SAC / Chunking the Critic} is relevant because it uses
+  trajectory chunks and n-step targets together with a sequence-aware
+  critic.
+\end{itemize}
+
+This project does not reproduce full SACn or T-SAC. Instead, it tests
+the simpler mechanism shared by these directions: what happens when the
+SAC critic target horizon changes.
+
+\section{Method}\label{method}
+
+The implementation keeps the standard SAC training loop and adds a
+configurable n-step transition buffer before the replay buffer.
+
+The training pipeline is:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{environment step}
+\NormalTok{{-}\textgreater{} n{-}step buffer}
+\NormalTok{{-}\textgreater{} replay buffer}
+\NormalTok{{-}\textgreater{} critic update}
+\NormalTok{{-}\textgreater{} actor update}
+\NormalTok{{-}\textgreater{} target network update}
+\NormalTok{{-}\textgreater{} deterministic evaluation}
+\NormalTok{{-}\textgreater{} CSV logs and plots}
+\end{Highlighting}
+\end{Shaded}
+
+For each ready transition, the n-step buffer builds an aggregated
+transition:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{state      = s\_t}
+\NormalTok{action     = a\_t}
+\NormalTok{reward     = r\_t + gamma r\_\{t+1\} + ... + gamma\^{}(n{-}1) r\_\{t+n{-}1\}}
+\NormalTok{next\_state = s\_\{t+k\}}
+\NormalTok{discount   = gamma\^{}k}
+\NormalTok{done       = terminal flag inside the n{-}step window}
+\end{Highlighting}
+\end{Shaded}
+
+If an episode terminates before the full window is collected, the window
+is cut early. For \texttt{n=1}, this reduces to standard SAC.
+
+The critic target then becomes:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{target = reward\_n + discount\_n * target\_value(next\_state)}
+\end{Highlighting}
+\end{Shaded}
+
+This is the only algorithmic component varied across the main ablation.
+The SAC architecture and hyperparameters are kept fixed for
+\texttt{n=1}, \texttt{n=3}, and \texttt{n=5}.
+
+\section{Experimental setup}\label{experimental-setup}
+
+The experiments use two continuous-control environments.
+
+\begin{longtable}[]{@{}llrr@{}}
+\toprule\noalign{}
+Environment & Role & Steps & Seed \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\texttt{Pendulum-v1} & sanity check & 30,000 & 0 \\
+\texttt{HalfCheetah-v5} & main benchmark & 100,000 & 0 \\
+\end{longtable}
+
+The experiments were run on a Ryzen 5700 laptop through WSL Ubuntu using
+CPU training. Evaluation uses a deterministic policy and five evaluation
+episodes per checkpoint. Raw CSV logs and plots are committed to the
+repository.
+
+\begin{warningbox}
+\textbf{Important limitation.} These are single-seed experiments. They are useful as bounded reproduction and ablation evidence, but they are not a statistical proof that one horizon is universally best.
+\end{warningbox}
+
+\section{Results}\label{results}
+
+\subsection{Pendulum-v1 sanity check}\label{pendulum-v1-sanity-check}
+
+On \texttt{Pendulum-v1}, all three variants train successfully and reach
+similar final quality. The main role of this experiment is to verify
+that the implementation works and that the n-step target construction
+does not immediately break SAC on a simple environment.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.92\textwidth,height=\textheight]{results/plots/pendulum_learning_curves.png}
+\caption{Pendulum-v1 learning curves}
+\end{figure}
+
+The curves suggest that \texttt{n=3} reaches a good return quickly, but
+the task is too simple to support a strong conclusion about the best
+horizon. This experiment should be treated as a sanity check, not as the
+main evidence.
+
+\subsection{HalfCheetah-v5 main
+ablation}\label{halfcheetah-v5-main-ablation}
+
+The main result is observed on \texttt{HalfCheetah-v5}.
+
+\begin{longtable}[]{@{}lrr@{}}
+\toprule\noalign{}
+Method & Final eval return & Best eval return \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+SAC n=1 & 4354.49 & 4354.49 \\
+SAC n=3 & 4578.91 & 4578.91 \\
+SAC n=5 & 764.49 & 833.37 \\
+\end{longtable}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.92\textwidth,height=\textheight]{results/plots/halfcheetah_learning_curves.png}
+\caption{HalfCheetah-v5 learning curves}
+\end{figure}
+
+\begin{resultbox}
+\textbf{Main observation.} In this single-seed run, \texttt{n=3} gives the best final return and reaches strong performance earlier than the 1-step baseline. The \texttt{n=5} variant fails to learn a strong running policy under the same settings.
+\end{resultbox}
+
+The useful part of the result is not only that \texttt{n=3} performs
+best. The useful part is also the failure of \texttt{n=5}: it shows that
+increasing the n-step horizon is not automatically beneficial in
+off-policy SAC.
+
+\section{Interpretation}\label{interpretation}
+
+The result supports the expected trade-off.
+
+A moderate n-step horizon can improve sample efficiency because reward
+information is propagated backward faster. This likely explains why
+\texttt{n=3} improves over the 1-step baseline on
+\texttt{HalfCheetah-v5}.
+
+At the same time, a longer naive target can increase off-policy bias and
+target variance. This likely explains why \texttt{n=5} fails under the
+same hyperparameters.
+
+The safest conclusion is therefore narrow:
+
+\begin{keybox}
+In this limited-compute single-seed ablation, 3-step SAC improved HalfCheetah learning compared with the 1-step baseline, while 5-step SAC failed under the same hyperparameters.
+\end{keybox}
+
+The project should not claim that \texttt{n=3} is always best or that
+\texttt{n=5} always fails. It shows that the horizon is a stability
+parameter and that naive longer targets can be risky.
+
+\section{Limitations}\label{limitations}
+
+The main limitations are:
+
+\begin{itemize}
+\tightlist
+\item
+  only one random seed;
+\item
+  only two environments;
+\item
+  no full SACn correction mechanism;
+\item
+  no transformer or sequence-aware critic;
+\item
+  no separate hyperparameter tuning for each horizon;
+\item
+  limited laptop CPU compute.
+\end{itemize}
+
+These limitations are important. The project is not a paper-scale
+benchmark and does not make a state-of-the-art claim. Its value is an
+implementation-level ablation and a clear failure analysis.
+
+\section{Future work}\label{future-work}
+
+The most useful extensions are:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  run 3-5 seeds;
+\item
+  add more MuJoCo environments such as \texttt{Hopper-v5} or
+  \texttt{Walker2d-v5};
+\item
+  compare naive n-step SAC with SACn-style corrections;
+\item
+  tune hyperparameters separately for each horizon;
+\item
+  add a sequence-aware critic inspired by T-SAC;
+\item
+  report confidence intervals and failure rates.
+\end{enumerate}
+
+\section{Conclusion}\label{conclusion}
+
+This project implements configurable n-step targets in SAC and tests
+them in a small but reproducible ablation. \texttt{Pendulum-v1} confirms
+that the implementation works. \texttt{HalfCheetah-v5} shows the main
+trade-off: \texttt{n=3} helps, \texttt{n=1} remains a strong baseline,
+and \texttt{n=5} fails under the same hyperparameters.
+
+The final takeaway is:
+
+\begin{quote}
+N-step horizon is a stability parameter, not a bigger-is-better knob.
+\end{quote}
+
+\end{document}
