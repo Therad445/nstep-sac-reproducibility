@@ -56,3 +56,35 @@ Additional note:
 
 The critic loss was larger for longer n-step horizons. This is expected because the target contains more accumulated reward and can become noisier in an off-policy replay setting. This supports the main motivation of the project: n-step targets can help credit assignment, but they are not a free improvement and need stability analysis.
 
+### Run 002 — HalfCheetah single-seed n-step ablation
+
+Date: 2026-06-15  
+Machine: Ryzen 5700 laptop, WSL Ubuntu, CPU training  
+Environment: `HalfCheetah-v5`  
+Total steps: 100,000  
+Evaluation: every 5,000 steps, 5 deterministic episodes  
+Seed: 0  
+
+Compared runs:
+
+| Run | n-step horizon | Final eval return | Best eval return | Best step | Runtime |
+|---|---:|---:|---:|---:|---:|
+| `halfcheetah_sac_n1_seed0` | 1 | 4354.49 | 4354.49 | 100000 | 1320s |
+| `halfcheetah_sac_n3_seed0` | 3 | 4578.91 | 4578.91 | 100000 | 1256s |
+| `halfcheetah_sac_n5_seed0` | 5 | 764.49 | 833.37 | 90000 | 1286s |
+
+Additional sample-efficiency markers:
+
+| Run | Steps to return ≥ 3000 | Steps to return ≥ 4000 |
+|---|---:|---:|
+| `halfcheetah_sac_n1_seed0` | 65000 | 100000 |
+| `halfcheetah_sac_n3_seed0` | 45000 | 70000 |
+| `halfcheetah_sac_n5_seed0` | not reached | not reached |
+
+Observation:
+
+The 3-step SAC variant performed best in this single-seed HalfCheetah run. It reached return ≥3000 earlier than the 1-step baseline and crossed return ≥4000 around 70k environment steps, while the 1-step baseline reached this level only by the final evaluation point.
+
+The 5-step variant did not learn a strong running policy in this run. Its return stayed below 1000, which suggests that a longer naive n-step target can be harmful in this off-policy SAC setting.
+
+This result supports the main project hypothesis: n-step credit assignment can improve sample efficiency, but the horizon is sensitive. A moderate horizon may help, while a longer horizon can introduce too much noise, bias, or instability.

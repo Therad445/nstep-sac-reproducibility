@@ -16,6 +16,21 @@ The project uses a limited compute budget. This means:
 - weaker statistical claims;
 - possible sensitivity to hyperparameters.
 
+## Experimental limitations observed so far
+
+The HalfCheetah ablation gives a useful signal, but it is still a single-seed experiment. The current results should not be used to claim that 3-step SAC is generally better than 1-step SAC across all tasks.
+
+The 5-step run performed poorly. There are several possible explanations:
+
+- the longer target may increase off-policy bias;
+- accumulated rewards may increase target variance;
+- the same learning rate and entropy settings may not be equally suitable for all horizons;
+- one seed is not enough to separate a robust failure from an unlucky run.
+
+For this reason, the strongest conclusion is not "n=3 is always best", but rather:
+
+> In this limited-compute setting, moderate n-step targets improved learning, while longer naive n-step targets were much less stable.
+
 ## Reproduction limitations
 
 This project is a bounded reproduction. It does not attempt to fully reproduce the original paper-scale T-SAC experiments. The main experiment focuses on the n-step target mechanism and compares several horizons in a compact setting.

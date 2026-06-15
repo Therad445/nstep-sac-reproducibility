@@ -53,6 +53,22 @@ Current interpretation:
 
 This run is a sanity check. It shows that all three variants can train successfully on a small continuous-control environment. The 3-step variant improves faster early in training, while all methods converge to a similar final return. Since this is a single-seed result, it is not enough to claim a robust advantage of any horizon.
 
+### HalfCheetah-v5 single-seed ablation
+
+The main completed experiment compares SAC with 1-step, 3-step and 5-step targets on `HalfCheetah-v5`.
+
+| Method | Seed | Total steps | Final eval return | Best eval return |
+|---|---:|---:|---:|---:|
+| SAC n=1 | 0 | 100,000 | 4354.49 | 4354.49 |
+| SAC n=3 | 0 | 100,000 | 4578.91 | 4578.91 |
+| SAC n=5 | 0 | 100,000 | 764.49 | 833.37 |
+
+Current interpretation:
+
+The 3-step variant is the strongest run in this setting. It improves sample efficiency and reaches high return earlier than the 1-step baseline. The 5-step variant performs much worse and does not reach a stable high-return behavior.
+
+This is still a single-seed result, so it should be treated as evidence for a trend rather than a final statistical claim.
+
 ## Deviations from full paper-scale experiments
 
 - smaller number of environments;
