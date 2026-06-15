@@ -1,0 +1,18 @@
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.DS_Store
+.env
+
+# Large or noisy training artifacts.
+checkpoints/
+runs/
+wandb/
+*.pt
+*.pth
+*.ckpt
+
+# Raw logs can be regenerated; curated summary tables and plots may be committed.
+results/raw/*.csv
+results/raw/*.json

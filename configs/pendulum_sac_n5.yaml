@@ -1,0 +1,26 @@
+env_id: Pendulum-v1
+run_name: pendulum_sac_n5_seed0
+seed: 0
+
+total_steps: 30000
+start_steps: 1000
+update_after: 1000
+update_every: 1
+eval_every: 2000
+eval_episodes: 5
+
+n_step: 5
+gamma: 0.99
+tau: 0.005
+alpha: 0.2
+auto_alpha: true
+
+actor_lr: 0.0003
+critic_lr: 0.0003
+alpha_lr: 0.0003
+batch_size: 256
+replay_size: 1000000
+hidden_sizes: [256, 256]
+
+log_dir: results/raw
+plot_dir: results/plots
