@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-python -m compileall -q src
-python - <<'PY'
+python3 -m compileall -q src
+python3 - <<'PY'
 import importlib
 
 required = ["gymnasium", "torch", "yaml", "numpy"]
