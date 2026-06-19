@@ -101,15 +101,15 @@ bash scripts/run_pendulum_ablation.sh
 Run HalfCheetah runs manually:
 
 ```bash
-OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 python -m src.train --config configs/halfcheetah_sac_n1.yaml
-OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 python -m src.train --config configs/halfcheetah_sac_n3.yaml
-OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 python -m src.train --config configs/halfcheetah_sac_n5.yaml
+OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 python3 -m src.train --config configs/halfcheetah_sac_n1.yaml
+OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 python3 -m src.train --config configs/halfcheetah_sac_n3.yaml
+OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 python3 -m src.train --config configs/halfcheetah_sac_n5.yaml
 ```
 
 Build plots:
 
 ```bash
-python -m src.plot_results --input results/raw --out results/plots
+python3 -m src.plot_results --input results/raw --out results/plots
 ```
 
 ## Limitations
