@@ -44,6 +44,18 @@ SAC n=5
 
 All runs use seed 0. This is a limitation, but it is also part of the project setting: the goal is a small-compute, reproducible student experiment rather than a large-scale benchmark.
 
+
+## Final materials
+
+- Main presentation RU: `slides/nstep_sac_template_style_deck_ru.pptx`
+- Presentation EN: `slides/nstep_sac_template_style_deck.pptx`
+- Final report RU: `paper/final_report.pdf`
+- Final report EN: `paper/final_report_en.pdf`
+- Defense speech RU: `docs/defense_speech_ru.md`
+- Defense speech EN: `docs/defense_speech_en.md`
+- Main result table: `results/halfcheetah_summary.csv`
+- Learning curves: `results/plots/`
+
 ## Results summary
 
 ### Pendulum-v1
