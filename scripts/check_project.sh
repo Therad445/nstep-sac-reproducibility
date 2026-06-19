@@ -1,17 +1,15 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-python3 -m compileall -q src
+echo "Checking Python dependencies..."
 python3 - <<'PY'
-import importlib
+import importlib.util
+import sys
 
-required = ["gymnasium", "torch", "yaml", "numpy"]
 missing = []
-for module_name in required:
-    try:
-        importlib.import_module(module_name)
-    except ModuleNotFoundError:
-        missing.append(module_name)
+for package in ["gymnasium", "torch", "numpy", "yaml", "matplotlib", "pandas"]:
+    if importlib.util.find_spec(package) is None:
+        missing.append(package)
 
 if missing:
     print("Missing Python dependencies:", ", ".join(missing))
@@ -20,21 +18,33 @@ if missing:
     print("  source .venv/bin/activate")
     print("  pip install --upgrade pip")
     print("  pip install -r requirements.txt")
-    raise SystemExit(1)
+    sys.exit(1)
+PY
 
+echo "Checking Python syntax..."
+python3 -m compileall -q src
+
+echo "Checking shell script syntax..."
+bash -n scripts/*.sh
+
+echo "Checking environment smoke test..."
+python3 - <<'PY'
 import gymnasium as gym
 import torch
-import yaml
 
-with open('configs/pendulum_sac_n1.yaml', encoding='utf-8') as f:
-    cfg = yaml.safe_load(f)
+env = gym.make("Pendulum-v1")
+obs, info = env.reset(seed=0)
 
-env = gym.make(cfg['env_id'])
-obs, _ = env.reset(seed=cfg['seed'])
-print('env:', cfg['env_id'])
-print('obs shape:', obs.shape)
-print('action space:', env.action_space)
-print('torch:', torch.__version__)
-print('cuda:', torch.cuda.is_available())
+print("env:", env.spec.id)
+print("obs shape:", obs.shape)
+print("action space:", env.action_space)
+print("torch:", torch.__version__)
+print("cuda:", torch.cuda.is_available())
+
 env.close()
 PY
+
+echo "Checking plot generation CLI..."
+python3 -m src.plot_results --input results/raw --out /tmp/nstep_sac_plot_check
+
+echo "Project check passed."
