@@ -3,7 +3,6 @@
 \PassOptionsToPackage{hyphens}{url}
 %
 \documentclass[
-  11pt,
 ]{article}
 \usepackage{amsmath,amssymb}
 \usepackage{iftex}
@@ -40,7 +39,6 @@
   \KOMAoptions{parskip=half}}
 \makeatother
 \usepackage{xcolor}
-\usepackage[a4paper,margin=2.15cm]{geometry}
 \usepackage{color}
 \usepackage{fancyvrb}
 \newcommand{\VerbBar}{|}
@@ -106,6 +104,39 @@
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{5}
+% definitions for citeproc citations
+\NewDocumentCommand\citeproctext{}{}
+\NewDocumentCommand\citeproc{mm}{%
+  \begingroup\def\citeproctext{#2}\cite{#1}\endgroup}
+\makeatletter
+ % allow citations to break across lines
+ \let\@cite@ofmt\@firstofone
+ % avoid brackets around text for \cite:
+ \def\@biblabel#1{}
+ \def\@cite#1#2{{#1\if@tempswa , #2\fi}}
+\makeatother
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newenvironment{CSLReferences}[2] % #1 hanging-indent, #2 entry-spacing
+ {\begin{list}{}{%
+  \setlength{\itemindent}{0pt}
+  \setlength{\leftmargin}{0pt}
+  \setlength{\parsep}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1
+   \setlength{\leftmargin}{\cslhangindent}
+   \setlength{\itemindent}{-1\cslhangindent}
+  \fi
+  % set entry spacing
+  \setlength{\itemsep}{#2\baselineskip}}}
+ {\end{list}}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{\hfill\break\parbox[t]{\linewidth}{\strut\ignorespaces#1\strut}}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 \ifLuaTeX
 \usepackage[bidi=basic]{babel}
 \else
@@ -119,97 +150,64 @@
 % get rid of language-specific shorthands (see #6817):
 \let\LanguageShortHands\languageshorthands
 \def\languageshorthands#1{}
-% Custom LaTeX styling for the n-step SAC project report.
-% Included with: pandoc ... -H paper/latex/preamble.tex
+\usepackage{fontspec}
 \usepackage{xcolor}
-\usepackage{graphicx}
-\usepackage{float}
+\usepackage{tcolorbox}
 \usepackage{booktabs}
 \usepackage{longtable}
 \usepackage{array}
 \usepackage{caption}
-\usepackage{enumitem}
-\usepackage{titlesec}
+\usepackage{float}
 \usepackage{fancyhdr}
-\usepackage[most]{tcolorbox}
-
-\definecolor{MTCred}{HTML}{E30613}
-\definecolor{DeepText}{HTML}{202124}
-\definecolor{SoftGray}{HTML}{666A73}
-\definecolor{PaleLavender}{HTML}{F4F0FA}
-\definecolor{PaleBlue}{HTML}{EEF6FF}
-\definecolor{CodeBg}{HTML}{F6F7F9}
-\definecolor{RuleGray}{HTML}{D9DDE7}
-
-\AtBeginDocument{\hypersetup{
-  colorlinks=true,
-  linkcolor=MTCred,
-  urlcolor=MTCred,
-  citecolor=MTCred,
-  pdfborder={0 0 0}
-}}
-
-\captionsetup{font=small, labelfont=bf, labelsep=period}
-\setlist[itemize]{leftmargin=1.4em, itemsep=0.25em, topsep=0.25em}
-\setlist[enumerate]{leftmargin=1.6em, itemsep=0.25em, topsep=0.25em}
-
-\titleformat{\section}
-  {\Large\bfseries\sffamily\color{DeepText}}
-  {\thesection}{0.6em}{}
-\titleformat{\subsection}
-  {\large\bfseries\sffamily\color{DeepText}}
-  {\thesubsection}{0.6em}{}
-\titlespacing*{\section}{0pt}{1.4em}{0.55em}
-\titlespacing*{\subsection}{0pt}{1.0em}{0.35em}
-
+\usepackage{tocloft}
+\usepackage{geometry}
+\geometry{margin=1in}
+\definecolor{mtcred}{HTML}{E30613}
+\definecolor{lightblue}{HTML}{EEF7FF}
+\definecolor{lightred}{HTML}{FFF1F3}
+\definecolor{lightgraybox}{HTML}{F6F7F9}
+\definecolor{darktext}{HTML}{222222}
+\AtBeginDocument{\hypersetup{colorlinks=true, linkcolor=mtcred, urlcolor=mtcred, citecolor=mtcred}}
 \pagestyle{fancy}
 \fancyhf{}
-\lhead{\small\sffamily n-step SAC final project}
-\rhead{\small\sffamily Radmir I.}
-\cfoot{\small\sffamily\thepage}
-\renewcommand{\headrulewidth}{0.3pt}
-\renewcommand{\footrulewidth}{0pt}
-
+\lhead{n-step SAC final project}
+\rhead{Radmir I.}
+\cfoot{\thepage}
+\setlength{\headheight}{14pt}
 \newtcolorbox{keybox}{
-  colback=PaleLavender,
-  colframe=MTCred,
-  boxrule=0.8pt,
-  arc=2mm,
-  left=2.5mm,
-  right=2.5mm,
-  top=2mm,
-  bottom=2mm,
-  fontupper=\small
+  colback=lightblue,
+  colframe=mtcred!70!black,
+  boxrule=0.6pt,
+  arc=3mm,
+  left=2mm,
+  right=2mm,
+  top=1mm,
+  bottom=1mm
 }
-
-\newtcolorbox{resultbox}{
-  colback=PaleBlue,
-  colframe=RuleGray,
-  boxrule=0.5pt,
-  arc=2mm,
-  left=2.5mm,
-  right=2.5mm,
-  top=2mm,
-  bottom=2mm,
-  fontupper=\small
+\newtcolorbox{notegray}{
+  colback=lightgraybox,
+  colframe=black!15,
+  boxrule=0.4pt,
+  arc=3mm,
+  left=2mm,
+  right=2mm,
+  top=1mm,
+  bottom=1mm
 }
-
 \newtcolorbox{warningbox}{
-  colback=CodeBg,
-  colframe=SoftGray,
-  boxrule=0.5pt,
-  arc=2mm,
-  left=2.5mm,
-  right=2.5mm,
-  top=2mm,
-  bottom=2mm,
-  fontupper=\small
+  colback=lightred,
+  colframe=mtcred,
+  boxrule=0.6pt,
+  arc=3mm,
+  left=2mm,
+  right=2mm,
+  top=1mm,
+  bottom=1mm
 }
+\captionsetup{font=small, labelfont=bf}
 
-\renewcommand{\arraystretch}{1.18}
-\setlength{\parskip}{0.45em}
-\setlength{\parindent}{0pt}
-\setlength{\emergencystretch}{3em}
+\setlength{\cftsecnumwidth}{3em}
+\setlength{\cftsubsecnumwidth}{3.5em}
 \ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
@@ -230,20 +228,19 @@
   \apptocmd{\@title}{\par {\large #1 \par}}{}{}
 }
 \makeatother
-\subtitle{Final RL Project Report}
+\subtitle{Final RL Project Report, extended version}
 \author{Radmir I.}
 \date{2026}
 
 \begin{document}
 \maketitle
 
-\renewcommand*\contentsname{Contents}
 {
 \setcounter{tocdepth}{3}
 \tableofcontents
 }
 \begin{keybox}
-\textbf{Short version.} This project tests one central mechanism behind recent n-step SAC work: whether replacing the standard 1-step critic target with an n-step target helps Soft Actor-Critic under a limited compute budget. The main result on \texttt{HalfCheetah-v5}: \texttt{n=3} improved learning compared with the 1-step baseline, while \texttt{n=5} failed under the same hyperparameters. The main conclusion is that the n-step horizon is a stability parameter, not a simple bigger-is-better knob.
+\textbf{Short version.} This project tests one central mechanism behind recent n-step SAC work: whether replacing the standard 1-step critic target with an n-step target helps Soft Actor-Critic under a limited compute budget. On HalfCheetah-v5, the 3-step variant improved learning compared with the 1-step baseline, while the 5-step variant failed under the same hyperparameters. The main conclusion is deliberately narrow: the n-step horizon behaves like a stability parameter, not like a simple bigger-is-better knob.
 \end{keybox}
 
 \section{Abstract}\label{abstract}
@@ -253,140 +250,233 @@ This project studies a compact n-step modification of Soft Actor-Critic
 replacing the standard 1-step critic target with n-step targets improves
 sample efficiency in continuous-control tasks, and where the horizon
 becomes unstable. I implement a configurable n-step buffer before the
-replay buffer and compare SAC with \texttt{n=1}, \texttt{n=3}, and
-\texttt{n=5}. The experiments include \texttt{Pendulum-v1} as a sanity
-check and \texttt{HalfCheetah-v5} as the main benchmark. On
-\texttt{HalfCheetah-v5}, \texttt{n=3} reaches the best final return,
-while \texttt{n=5} fails to learn a strong running policy under the same
-hyperparameters. The result suggests that n-step credit assignment can
-help SAC, but the horizon is a stability parameter rather than a simple
-bigger-is-better knob.
+replay buffer and compare SAC with \(n=1\), \(n=3\), and \(n=5\). The
+experiments include Pendulum-v1 as a sanity check and HalfCheetah-v5 as
+the main benchmark. On HalfCheetah-v5, \(n=3\) reaches the best final
+return and reaches high-return behavior earlier than the baseline, while
+\(n=5\) fails to learn a strong running policy under the same
+hyperparameters. The result supports the idea that n-step credit
+assignment can help SAC, but only within a stability-sensitive range.
 
 \section{Introduction}\label{introduction}
 
-Soft Actor-Critic (SAC) is a strong off-policy actor-critic algorithm
-for continuous-control tasks. In the standard setup, the critic is
-usually trained with a one-step temporal-difference target. This target
-is stable and simple, but reward information is propagated backward only
-one step at a time.
+Soft Actor-Critic is a strong off-policy actor-critic algorithm for
+continuous-control tasks. It combines replay-based off-policy updates
+with a stochastic actor and a maximum-entropy objective, encouraging the
+policy to maximize both return and entropy (Haarnoja, Zhou, Abbeel, et
+al. 2018; Haarnoja, Zhou, Hartikainen, et al. 2018). This makes SAC a
+natural baseline for continuous-control experiments: it is
+sample-efficient, relatively stable, and already hard to improve without
+careful changes.
 
-N-step returns propose a more aggressive alternative: accumulate several
-rewards before bootstrapping. This can improve credit assignment,
-especially when a useful action affects reward only after several
-environment steps. However, in off-policy learning this is not free.
-Longer fragments sampled from the replay buffer may have been generated
-by older policies, which can increase off-policy bias and target
-variance.
+In standard SAC, the critic is usually trained with a 1-step
+temporal-difference target. This target is simple and stable, but reward
+information is propagated backward only one step at a time. N-step
+returns propose a more aggressive alternative: accumulate several
+rewards before bootstrapping. This can improve credit assignment because
+useful reward information can move backward faster (Sutton and Barto
+2018).
 
-For this reason, the project does not try to claim a new
-state-of-the-art algorithm. Instead, it isolates one mechanism - the
-critic target horizon - and tests it in a small, reproducible
-experiment.
+However, SAC is off-policy. Transitions sampled from the replay buffer
+may have been collected by older policies. A longer n-step target
+depends on a longer replay fragment and may therefore introduce more
+off-policy bias and target variance. This is the core reason why n-step
+SAC is non-trivial and why recent work has revisited the topic (Łyskawa,
+Lewandowski, and Wawrzyński 2025; Tian, Celik, and Neumann 2025).
 
-\section{Research question}\label{research-question}
+The project is intentionally not a state-of-the-art claim. It is a
+bounded reproduction and ablation study: I isolate one mechanism - the
+critic target horizon - and test whether the expected trade-off appears
+in a compact, reproducible setup.
+
+\section{Research question and
+contribution}\label{research-question-and-contribution}
 
 The main research question is:
 
-\begin{quote}
-Do n-step returns improve SAC under limited compute, and how sensitive
-is the result to the chosen horizon?
-\end{quote}
+\begin{keybox}
+Do n-step returns improve SAC under limited compute, and how sensitive is the result to the chosen horizon?
+\end{keybox}
 
 The project compares three variants:
 
-\begin{longtable}[]{@{}ll@{}}
+\begin{longtable}[]{@{}lll@{}}
 \toprule\noalign{}
-Method & Description \\
+Method & Description & Expected behavior \\
 \midrule\noalign{}
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-SAC n=1 & standard 1-step SAC baseline \\
-SAC n=3 & SAC with a moderate 3-step target \\
-SAC n=5 & SAC with a longer and riskier 5-step target \\
+SAC \(n=1\) & standard 1-step SAC baseline & stable baseline \\
+SAC \(n=3\) & moderate 3-step target & may improve sample efficiency \\
+SAC \(n=5\) & longer 5-step target & potentially higher risk \\
 \end{longtable}
 
-The goal is not to prove that one horizon is universally optimal. The
-goal is to check whether the expected trade-off appears in a compact and
-reproducible setting.
+The contribution is small but concrete:
 
-\section{Literature context}\label{literature-context}
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  a configurable n-step transition buffer integrated into a compact SAC
+  implementation;
+\item
+  a controlled \(n=1/3/5\) ablation on Pendulum-v1 and HalfCheetah-v5;
+\item
+  committed raw logs, plots, summary tables, and reproducibility notes;
+\item
+  a failure analysis of the \(n=5\) run under fixed hyperparameters.
+\end{enumerate}
 
-The project sits between standard SAC and recent n-step or
-sequence-aware SAC variants.
+\section{Related work}\label{related-work}
+
+\subsection{Soft Actor-Critic}\label{soft-actor-critic}
+
+SAC is an off-policy maximum-entropy actor-critic algorithm. The actor
+is optimized not only for expected return but also for entropy, which
+encourages exploration and can improve robustness. The practical SAC
+formulation also uses twin Q-critics, target networks, replay buffer
+sampling, and automatic entropy temperature tuning (Haarnoja, Zhou,
+Abbeel, et al. 2018; Haarnoja, Zhou, Hartikainen, et al. 2018).
+
+SAC is a good baseline for this project because it is already a strong
+continuous-control method. If a small n-step modification helps or
+breaks SAC, the effect is meaningful enough to analyze.
+
+\subsection{N-step returns and credit
+assignment}\label{n-step-returns-and-credit-assignment}
+
+N-step returns are a classical temporal-difference learning idea.
+Instead of bootstrapping after a single reward, an n-step target
+accumulates several rewards before bootstrapping:
+
+\[
+G_t^{(n)} = r_t + \gamma r_{t+1} + \dots + \gamma^{n-1} r_{t+n-1} + \gamma^n V(s_{t+n}).
+\]
+
+This can propagate delayed rewards faster than a 1-step target. At the
+same time, the target contains more sampled rewards and changes the
+bias-variance trade-off (Sutton and Barto 2018; Sharma et al. 2017).
+
+\subsection{Off-policy multi-step
+correction}\label{off-policy-multi-step-correction}
+
+The off-policy setting is the main difficulty. In replay-based learning,
+longer trajectory fragments may have been collected by a behavior policy
+different from the current target policy. Several multi-step methods
+explicitly address this issue through correction or trace truncation.
+Retrace(\(\lambda\)) is designed as a safe and efficient off-policy
+return-based method (Munos et al. 2016). IMPALA introduces V-trace to
+stabilize learning under decoupled acting and learning (Espeholt et al.
+2018). These works are not implemented here, but they motivate why naive
+off-policy multi-step targets should be treated carefully.
+
+A related warning comes from the ``deadly triad'' of function
+approximation, bootstrapping, and off-policy learning (Hasselt et al.
+2018). Naive n-step SAC touches all three: it uses neural critics,
+bootstrapped targets, and replayed off-policy transitions.
+
+\subsection{SACn and T-SAC}\label{sacn-and-t-sac}
+
+SACn directly studies how to combine Soft Actor-Critic with n-step
+returns. Its motivation is close to this project: n-step returns can
+speed up learning, but the usual combination with SAC introduces bias
+due to changing action distributions, and importance sampling may become
+numerically unstable (Łyskawa, Lewandowski, and Wawrzyński 2025).
+
+T-SAC / Chunking the Critic takes a more ambitious direction. It uses a
+sequence-conditioned critic with trajectory chunks and aggregated n-step
+targets, making temporal context part of critic learning rather than
+only changing a scalar target (Tian, Celik, and Neumann 2025).
+
+This project does not reproduce SACn or T-SAC. Instead, it isolates a
+smaller shared mechanism: changing the critic target horizon. This makes
+the experiment feasible on limited compute and easier to interpret.
+
+\section{Method}\label{method}
+
+\subsection{Standard SAC components}\label{standard-sac-components}
+
+The implementation keeps the usual SAC structure:
 
 \begin{itemize}
 \tightlist
 \item
-  \textbf{SAC} is the baseline off-policy actor-critic method with
-  entropy regularization, twin critics, target networks, and a replay
-  buffer.
+  squashed Gaussian actor;
 \item
-  \textbf{SACn} is important as a direction that focuses on the
-  difficulty of using n-step returns in off-policy SAC and motivates
-  stabilization or correction mechanisms.
+  twin Q-critics;
 \item
-  \textbf{T-SAC / Chunking the Critic} is relevant because it uses
-  trajectory chunks and n-step targets together with a sequence-aware
-  critic.
+  target critic networks;
+\item
+  replay buffer;
+\item
+  automatic entropy tuning;
+\item
+  deterministic evaluation checkpoints.
 \end{itemize}
 
-This project does not reproduce full SACn or T-SAC. Instead, it tests
-the simpler mechanism shared by these directions: what happens when the
-SAC critic target horizon changes.
+The critic update uses the minimum of the two target critics and
+subtracts the entropy term:
 
-\section{Method}\label{method}
+\[
+V_{\text{target}}(s') =
+\min_i Q_i^{\text{target}}(s', a') - \alpha \log \pi(a'|s').
+\]
 
-The implementation keeps the standard SAC training loop and adds a
-configurable n-step transition buffer before the replay buffer.
+For the standard 1-step version, the target is:
 
-The training pipeline is:
+\[
+y_t = r_t + \gamma (1-d_t) V_{\text{target}}(s_{t+1}).
+\]
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{environment step}
-\NormalTok{{-}\textgreater{} n{-}step buffer}
-\NormalTok{{-}\textgreater{} replay buffer}
-\NormalTok{{-}\textgreater{} critic update}
-\NormalTok{{-}\textgreater{} actor update}
-\NormalTok{{-}\textgreater{} target network update}
-\NormalTok{{-}\textgreater{} deterministic evaluation}
-\NormalTok{{-}\textgreater{} CSV logs and plots}
-\end{Highlighting}
-\end{Shaded}
+\subsection{N-step transition buffer}\label{n-step-transition-buffer}
 
-For each ready transition, the n-step buffer builds an aggregated
-transition:
+The only algorithmic component varied in the main ablation is the
+transition aggregation before the replay buffer. The n-step buffer
+stores a short queue of recent transitions. When enough transitions are
+available, it builds an aggregated transition:
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{state      = s\_t}
 \NormalTok{action     = a\_t}
-\NormalTok{reward     = r\_t + gamma r\_\{t+1\} + ... + gamma\^{}(n{-}1) r\_\{t+n{-}1\}}
+\NormalTok{reward\_n   = r\_t + gamma r\_\{t+1\} + ... + gamma\^{}(k{-}1) r\_\{t+k{-}1\}}
 \NormalTok{next\_state = s\_\{t+k\}}
-\NormalTok{discount   = gamma\^{}k}
+\NormalTok{discount\_n = gamma\^{}k}
 \NormalTok{done       = terminal flag inside the n{-}step window}
 \end{Highlighting}
 \end{Shaded}
 
-If an episode terminates before the full window is collected, the window
-is cut early. For \texttt{n=1}, this reduces to standard SAC.
+Here \(k \leq n\). If the episode ends before the full window is
+collected, the window is cut early. For \(n=1\), this construction
+reduces to standard SAC.
 
-The critic target then becomes:
+The critic target becomes:
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{target = reward\_n + discount\_n * target\_value(next\_state)}
-\end{Highlighting}
-\end{Shaded}
+\[
+y_t^{(n)} = R_t^{(n)} + (1-d_t) \gamma^k V_{\text{target}}(s_{t+k}).
+\]
 
-This is the only algorithmic component varied across the main ablation.
-The SAC architecture and hyperparameters are kept fixed for
-\texttt{n=1}, \texttt{n=3}, and \texttt{n=5}.
+The replay buffer therefore samples the same kind of objects for all
+runs, but the reward and discount fields encode different target
+horizons.
+
+\subsection{What is fixed in the
+ablation}\label{what-is-fixed-in-the-ablation}
+
+The comparison keeps the same architecture and hyperparameters for
+\(n=1\), \(n=3\), and \(n=5\). This choice is intentional. It makes the
+experiment a clean sensitivity check of the target horizon.
+
+\begin{notegray}
+This also means that the comparison is not fully tuned for every horizon. A separate hyperparameter search might improve the $n=5$ run. The current result should therefore be read as a fixed-configuration stability test, not as proof that $n=5$ can never work.
+\end{notegray}
 
 \section{Experimental setup}\label{experimental-setup}
 
-The experiments use two continuous-control environments.
+\subsection{Environments}\label{environments}
+
+Two environments are used.
 
 \begin{longtable}[]{@{}llrr@{}}
 \toprule\noalign{}
@@ -395,43 +485,84 @@ Environment & Role & Steps & Seed \\
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-\texttt{Pendulum-v1} & sanity check & 30,000 & 0 \\
-\texttt{HalfCheetah-v5} & main benchmark & 100,000 & 0 \\
+Pendulum-v1 & sanity check & 30,000 & 0 \\
+HalfCheetah-v5 & main benchmark & 100,000 & 0 \\
 \end{longtable}
 
-The experiments were run on a Ryzen 5700 laptop through WSL Ubuntu using
-CPU training. Evaluation uses a deterministic policy and five evaluation
-episodes per checkpoint. Raw CSV logs and plots are committed to the
-repository.
+Pendulum-v1 is a simple classic-control continuous-action task with
+action space \texttt{Box(-2.0,\ 2.0,\ (1,),\ float32)} and observation
+shape \texttt{(3,)} (Farama Foundation 2026b). HalfCheetah-v5 is a
+MuJoCo continuous-control locomotion task with action space
+\texttt{Box(-1.0,\ 1.0,\ (6,),\ float32)} and observation shape
+\texttt{(17,)}; the goal is to make the 2D robot run forward as fast as
+possible (Farama Foundation 2026a).
 
-\begin{warningbox}
-\textbf{Important limitation.} These are single-seed experiments. They are useful as bounded reproduction and ablation evidence, but they are not a statistical proof that one horizon is universally best.
-\end{warningbox}
+\subsection{Hyperparameters}\label{hyperparameters}
+
+\begin{longtable}[]{@{}lr@{}}
+\toprule\noalign{}
+Parameter & Value \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Discount factor \texttt{gamma} & 0.99 \\
+Target update coefficient \texttt{tau} & 0.005 \\
+Initial entropy coefficient \texttt{alpha} & 0.2 \\
+Automatic entropy tuning & yes \\
+Actor learning rate & 3e-4 \\
+Critic learning rate & 3e-4 \\
+Alpha learning rate & 3e-4 \\
+Batch size & 256 \\
+Replay buffer size & 1,000,000 \\
+Hidden sizes & {[}256, 256{]} \\
+Start steps & 5,000 \\
+Update after & 5,000 \\
+Evaluation interval & 5,000 steps \\
+Evaluation episodes & 5 \\
+Compared horizons & \(n=1,3,5\) \\
+\end{longtable}
+
+All completed runs use deterministic evaluation with five episodes per
+checkpoint. Raw CSV logs and plots are committed to the repository.
+
+\subsection{Hardware}\label{hardware}
+
+The experiments were run on a Ryzen 5700 laptop through WSL Ubuntu using
+CPU training. This is intentionally a limited-compute setup. The project
+is designed as a reproducible student experiment rather than a
+large-scale benchmark.
 
 \section{Results}\label{results}
 
 \subsection{Pendulum-v1 sanity check}\label{pendulum-v1-sanity-check}
 
-On \texttt{Pendulum-v1}, all three variants train successfully and reach
-similar final quality. The main role of this experiment is to verify
-that the implementation works and that the n-step target construction
-does not immediately break SAC on a simple environment.
+On Pendulum-v1, all three variants train successfully and reach similar
+final quality. The main role of this experiment is to verify that the
+implementation works and that the n-step target construction does not
+immediately break SAC on a simple environment.
 
 \begin{figure}
 \centering
-\includegraphics[width=0.92\textwidth,height=\textheight]{results/plots/pendulum_learning_curves.png}
-\caption{Pendulum-v1 learning curves}
+\includegraphics[width=0.9\textwidth,height=\textheight]{results/plots/pendulum_learning_curves.png}
+\caption{Pendulum-v1 learning curves}\label{fig:pendulum}
 \end{figure}
 
-The curves suggest that \texttt{n=3} reaches a good return quickly, but
-the task is too simple to support a strong conclusion about the best
+The curves suggest that \(n=3\) reaches a good return quickly, but
+Pendulum-v1 is too simple to support a strong claim about the best
 horizon. This experiment should be treated as a sanity check, not as the
 main evidence.
 
 \subsection{HalfCheetah-v5 main
 ablation}\label{halfcheetah-v5-main-ablation}
 
-The main result is observed on \texttt{HalfCheetah-v5}.
+The main result is observed on HalfCheetah-v5.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.9\textwidth,height=\textheight]{results/plots/halfcheetah_learning_curves.png}
+\caption{HalfCheetah-v5 learning curves}\label{fig:halfcheetah}
+\end{figure}
 
 \begin{longtable}[]{@{}lrr@{}}
 \toprule\noalign{}
@@ -440,72 +571,140 @@ Method & Final eval return & Best eval return \\
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-SAC n=1 & 4354.49 & 4354.49 \\
-SAC n=3 & 4578.91 & 4578.91 \\
-SAC n=5 & 764.49 & 833.37 \\
+SAC \(n=1\) & 4354.49 & 4354.49 \\
+SAC \(n=3\) & 4578.91 & 4578.91 \\
+SAC \(n=5\) & 764.49 & 833.37 \\
 \end{longtable}
 
-\begin{figure}
-\centering
-\includegraphics[width=0.92\textwidth,height=\textheight]{results/plots/halfcheetah_learning_curves.png}
-\caption{HalfCheetah-v5 learning curves}
-\end{figure}
-
-\begin{resultbox}
-\textbf{Main observation.} In this single-seed run, \texttt{n=3} gives the best final return and reaches strong performance earlier than the 1-step baseline. The \texttt{n=5} variant fails to learn a strong running policy under the same settings.
-\end{resultbox}
-
-The useful part of the result is not only that \texttt{n=3} performs
-best. The useful part is also the failure of \texttt{n=5}: it shows that
-increasing the n-step horizon is not automatically beneficial in
-off-policy SAC.
-
-\section{Interpretation}\label{interpretation}
-
-The result supports the expected trade-off.
-
-A moderate n-step horizon can improve sample efficiency because reward
-information is propagated backward faster. This likely explains why
-\texttt{n=3} improves over the 1-step baseline on
-\texttt{HalfCheetah-v5}.
-
-At the same time, a longer naive target can increase off-policy bias and
-target variance. This likely explains why \texttt{n=5} fails under the
-same hyperparameters.
-
-The safest conclusion is therefore narrow:
-
 \begin{keybox}
-In this limited-compute single-seed ablation, 3-step SAC improved HalfCheetah learning compared with the 1-step baseline, while 5-step SAC failed under the same hyperparameters.
+\textbf{Main observation.} In this single-seed run, $n=3$ gives the best final return and reaches strong performance earlier than the 1-step baseline. The $n=5$ variant fails to learn a strong running policy under the same settings.
 \end{keybox}
 
-The project should not claim that \texttt{n=3} is always best or that
-\texttt{n=5} always fails. It shows that the horizon is a stability
-parameter and that naive longer targets can be risky.
+\subsection{Sample-efficiency markers}\label{sample-efficiency-markers}
 
-\section{Limitations}\label{limitations}
+Final return is not the only useful metric. The HalfCheetah learning
+curve also shows a difference in how quickly the variants reach strong
+behavior.
 
-The main limitations are:
+\begin{longtable}[]{@{}lrr@{}}
+\toprule\noalign{}
+Method & Steps to return \(\geq 3000\) & Steps to return
+\(\geq 4000\) \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+SAC \(n=1\) & 65,000 & 100,000 \\
+SAC \(n=3\) & 45,000 & 70,000 \\
+SAC \(n=5\) & not reached & not reached \\
+\end{longtable}
+
+These markers support the visual reading of the curve: \(n=3\) learns
+faster in this run, while \(n=5\) never reaches high-return behavior.
+
+\section{Discussion}\label{discussion}
+
+The result supports the expected trade-off. A moderate n-step horizon
+can improve sample efficiency because reward information is propagated
+backward faster. This likely explains why \(n=3\) improves over the
+1-step baseline on HalfCheetah-v5.
+
+At the same time, a longer naive target can increase off-policy bias and
+target variance. This likely explains why \(n=5\) fails under the same
+hyperparameters. The most useful result is not only that \(n=3\) obtains
+the best final return. The more informative result is the failure of
+\(n=5\): it shows that increasing the target horizon can change the
+stability of off-policy SAC under fixed hyperparameters.
+
+\begin{warningbox}
+The safest conclusion is narrow: in this limited-compute single-seed ablation, 3-step SAC improved HalfCheetah learning compared with the 1-step baseline, while 5-step SAC failed under the same hyperparameters. The project does not claim universal superiority of $n=3$.
+\end{warningbox}
+
+This failure mode matches the motivation behind recent n-step SAC work.
+N-step targets can help credit assignment, but the horizon interacts
+with off-policy bias, target variance, critic stability, and entropy
+dynamics.
+
+\section{Threats to validity}\label{threats-to-validity}
+
+\subsection{Statistical validity}\label{statistical-validity}
+
+The main limitation is the use of a single seed. The current experiment
+is useful as bounded reproduction and ablation evidence, but it is not
+enough to make a statistical claim that \(n=3\) is generally better than
+\(n=1\), or that \(n=5\) generally fails. A stronger study should use at
+least 3-5 seeds and report confidence intervals.
+
+\subsection{Algorithmic validity}\label{algorithmic-validity}
+
+The implementation uses naive n-step targets without off-policy
+correction. This is intentional because the project tests the direct
+effect of changing the critic target horizon. However, it also means
+that the failure of \(n=5\) should not be interpreted as a failure of
+all n-step SAC methods. SACn-style correction or sequence-aware critics
+could stabilize longer horizons.
+
+\subsection{Hyperparameter fairness}\label{hyperparameter-fairness}
+
+All horizons use the same hyperparameters. This makes the ablation clean
+because only the target horizon changes. At the same time, it may
+disadvantage \(n=5\). A longer horizon may require different learning
+rates, target smoothing, entropy settings, or replay settings.
+
+\subsection{Environment coverage}\label{environment-coverage}
+
+The project uses Pendulum-v1 and HalfCheetah-v5. Pendulum-v1 is mainly a
+sanity check; it is too simple to support a strong claim about the best
+horizon. HalfCheetah-v5 is the main benchmark, but one MuJoCo task is
+not enough for a general conclusion. Future work should add Hopper-v5,
+Walker2d-v5, and possibly Ant-v5.
+
+\subsection{Compute budget}\label{compute-budget}
+
+All experiments were run under laptop CPU compute. This shaped the
+design: short training budgets, single seed, and compact architecture.
+The project should be read as a small reproducible ablation study rather
+than a paper-scale benchmark.
+
+\section{Reproducibility checklist}\label{reproducibility-checklist}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule\noalign{}
+Item & Status \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Code committed & yes \\
+Configs committed & yes \\
+Raw CSV logs committed & yes \\
+Plots committed & yes \\
+Summary table committed & yes \\
+Random seed recorded & yes, seed 0 \\
+Hardware documented & yes \\
+Limitations documented & yes \\
+Full multi-seed statistics & no \\
+\end{longtable}
+
+Key repository artifacts:
 
 \begin{itemize}
 \tightlist
 \item
-  only one random seed;
+  implementation: \texttt{src/rl/nstep\_buffer.py},
+  \texttt{src/rl/sac.py}, \texttt{src/train.py};
 \item
-  only two environments;
+  configs: \texttt{configs/pendulum\_sac\_n*.yaml},
+  \texttt{configs/halfcheetah\_sac\_n*.yaml};
 \item
-  no full SACn correction mechanism;
+  raw logs: \texttt{results/raw/*.csv};
 \item
-  no transformer or sequence-aware critic;
+  plots: \texttt{results/plots/*.png};
 \item
-  no separate hyperparameter tuning for each horizon;
+  summary: \texttt{results/halfcheetah\_summary.csv};
 \item
-  limited laptop CPU compute.
+  slides and notes: \texttt{slides/}, \texttt{docs/}.
 \end{itemize}
-
-These limitations are important. The project is not a paper-scale
-benchmark and does not make a state-of-the-art claim. Its value is an
-implementation-level ablation and a clear failure analysis.
 
 \section{Future work}\label{future-work}
 
@@ -517,30 +716,95 @@ The most useful extensions are:
 \item
   run 3-5 seeds;
 \item
-  add more MuJoCo environments such as \texttt{Hopper-v5} or
-  \texttt{Walker2d-v5};
+  add more MuJoCo environments such as Hopper-v5, Walker2d-v5, and
+  Ant-v5;
+\item
+  report confidence intervals and failure rates;
 \item
   compare naive n-step SAC with SACn-style corrections;
 \item
   tune hyperparameters separately for each horizon;
 \item
-  add a sequence-aware critic inspired by T-SAC;
-\item
-  report confidence intervals and failure rates.
+  test sequence-aware critics inspired by T-SAC.
 \end{enumerate}
 
 \section{Conclusion}\label{conclusion}
 
 This project implements configurable n-step targets in SAC and tests
-them in a small but reproducible ablation. \texttt{Pendulum-v1} confirms
-that the implementation works. \texttt{HalfCheetah-v5} shows the main
-trade-off: \texttt{n=3} helps, \texttt{n=1} remains a strong baseline,
-and \texttt{n=5} fails under the same hyperparameters.
+them in a small but reproducible ablation. Pendulum-v1 confirms that the
+implementation works. HalfCheetah-v5 shows the main trade-off: \(n=3\)
+helps, \(n=1\) remains a strong baseline, and \(n=5\) fails under the
+same hyperparameters.
 
-The final takeaway is:
+\begin{keybox}
+\textbf{Final takeaway.} The n-step horizon is a stability parameter, not a bigger-is-better knob.
+\end{keybox}
 
-\begin{quote}
-N-step horizon is a stability parameter, not a bigger-is-better knob.
-\end{quote}
+\section*{References}\label{references}
+\addcontentsline{toc}{section}{References}
+
+\phantomsection\label{refs}
+\begin{CSLReferences}{1}{0}
+\bibitem[\citeproctext]{ref-espeholt2018impala}
+Espeholt, Lasse, Hubert Soyer, Rémi Munos, Karen Simonyan, Volodymyr
+Mnih, Tom Ward, Yotam Doron, et al. 2018. {``IMPALA: Scalable
+Distributed Deep-RL with Importance Weighted Actor-Learner
+Architectures.''} \emph{arXiv Preprint arXiv:1802.01561}.
+\url{https://arxiv.org/abs/1802.01561}.
+
+\bibitem[\citeproctext]{ref-gymnasium_halfcheetah}
+Farama Foundation. 2026a. {``Gymnasium Documentation: HalfCheetah-V5.''}
+\url{https://gymnasium.farama.org/environments/mujoco/half_cheetah/}.
+
+\bibitem[\citeproctext]{ref-gymnasium_pendulum}
+---------. 2026b. {``Gymnasium Documentation: Pendulum-V1.''}
+\url{https://gymnasium.farama.org/environments/classic_control/pendulum/}.
+
+\bibitem[\citeproctext]{ref-haarnoja2018sac}
+Haarnoja, Tuomas, Aurick Zhou, Pieter Abbeel, and Sergey Levine. 2018.
+{``Soft Actor-Critic: Off-Policy Maximum Entropy Deep Reinforcement
+Learning with a Stochastic Actor.''} \emph{arXiv Preprint
+arXiv:1801.01290}. \url{https://arxiv.org/abs/1801.01290}.
+
+\bibitem[\citeproctext]{ref-haarnoja2018applications}
+Haarnoja, Tuomas, Aurick Zhou, Kristian Hartikainen, George Tucker,
+Sehoon Ha, Jie Tan, Vikash Kumar, et al. 2018. {``Soft Actor-Critic
+Algorithms and Applications.''} \emph{arXiv Preprint arXiv:1812.05905}.
+\url{https://arxiv.org/abs/1812.05905}.
+
+\bibitem[\citeproctext]{ref-vanhasselt2018deadlytriad}
+Hasselt, Hado van, Yotam Doron, Florian Strub, Matteo Hessel, Nicolas
+Sonnerat, and Joseph Modayil. 2018. {``Deep Reinforcement Learning and
+the Deadly Triad.''} \emph{arXiv Preprint arXiv:1812.02648}.
+\url{https://arxiv.org/abs/1812.02648}.
+
+\bibitem[\citeproctext]{ref-lyskawa2025sacn}
+Łyskawa, Jakub, Jakub Lewandowski, and Paweł Wawrzyński. 2025. {``SACn:
+Soft Actor-Critic with n-Step Returns.''} \emph{arXiv Preprint
+arXiv:2512.13165}. \url{https://arxiv.org/abs/2512.13165}.
+
+\bibitem[\citeproctext]{ref-munos2016retrace}
+Munos, Rémi, Tom Stepleton, Anna Harutyunyan, and Marc G. Bellemare.
+2016. {``Safe and Efficient Off-Policy Reinforcement Learning.''}
+\emph{arXiv Preprint arXiv:1606.02647}.
+\url{https://arxiv.org/abs/1606.02647}.
+
+\bibitem[\citeproctext]{ref-sharma2017mixing}
+Sharma, Sahil, Girish Raguvir J, Srivatsan Ramesh, and Balaraman
+Ravindran. 2017. {``Learning to Mix n-Step Returns: Generalizing
+Lambda-Returns for Deep Reinforcement Learning.''} \emph{arXiv Preprint
+arXiv:1705.07445}. \url{https://arxiv.org/abs/1705.07445}.
+
+\bibitem[\citeproctext]{ref-sutton2018rl}
+Sutton, Richard S., and Andrew G. Barto. 2018. \emph{Reinforcement
+Learning: An Introduction}. 2nd ed. MIT Press.
+
+\bibitem[\citeproctext]{ref-tian2025chunking}
+Tian, Dong, Onur Celik, and Gerhard Neumann. 2025. {``Chunking the
+Critic: A Transformer-Based Soft Actor-Critic with n-Step Returns.''}
+\emph{arXiv Preprint arXiv:2503.03660}.
+\url{https://arxiv.org/abs/2503.03660}.
+
+\end{CSLReferences}
 
 \end{document}

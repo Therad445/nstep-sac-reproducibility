@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-pandoc paper/final_report_en.md \
-  -o paper/final_report_en.pdf \
+pandoc paper/final_report.md \
+  -o paper/final_report.pdf \
   --pdf-engine=xelatex \
   --resource-path=.:paper:results/plots \
   --toc \
@@ -14,8 +14,8 @@ pandoc paper/final_report_en.md \
   -V sansfont="DejaVu Sans" \
   -V monofont="DejaVu Sans Mono"
 
-pandoc paper/final_report_en.md \
-  -o paper/final_report_en.tex \
+pandoc paper/final_report.md \
+  -o paper/final_report.tex \
   --pdf-engine=xelatex \
   --resource-path=.:paper:results/plots \
   --toc \

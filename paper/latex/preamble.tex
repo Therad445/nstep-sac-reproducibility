@@ -1,91 +1,58 @@
-% Custom LaTeX styling for the n-step SAC project report.
-% Included with: pandoc ... -H paper/latex/preamble.tex
+\usepackage{fontspec}
 \usepackage{xcolor}
-\usepackage{graphicx}
-\usepackage{float}
+\usepackage{tcolorbox}
 \usepackage{booktabs}
 \usepackage{longtable}
 \usepackage{array}
 \usepackage{caption}
-\usepackage{enumitem}
-\usepackage{titlesec}
+\usepackage{float}
 \usepackage{fancyhdr}
-\usepackage[most]{tcolorbox}
-
-\definecolor{MTCred}{HTML}{E30613}
-\definecolor{DeepText}{HTML}{202124}
-\definecolor{SoftGray}{HTML}{666A73}
-\definecolor{PaleLavender}{HTML}{F4F0FA}
-\definecolor{PaleBlue}{HTML}{EEF6FF}
-\definecolor{CodeBg}{HTML}{F6F7F9}
-\definecolor{RuleGray}{HTML}{D9DDE7}
-
-\AtBeginDocument{\hypersetup{
-  colorlinks=true,
-  linkcolor=MTCred,
-  urlcolor=MTCred,
-  citecolor=MTCred,
-  pdfborder={0 0 0}
-}}
-
-\captionsetup{font=small, labelfont=bf, labelsep=period}
-\setlist[itemize]{leftmargin=1.4em, itemsep=0.25em, topsep=0.25em}
-\setlist[enumerate]{leftmargin=1.6em, itemsep=0.25em, topsep=0.25em}
-
-\titleformat{\section}
-  {\Large\bfseries\sffamily\color{DeepText}}
-  {\thesection}{0.6em}{}
-\titleformat{\subsection}
-  {\large\bfseries\sffamily\color{DeepText}}
-  {\thesubsection}{0.6em}{}
-\titlespacing*{\section}{0pt}{1.4em}{0.55em}
-\titlespacing*{\subsection}{0pt}{1.0em}{0.35em}
-
+\usepackage{tocloft}
+\usepackage{geometry}
+\geometry{margin=1in}
+\definecolor{mtcred}{HTML}{E30613}
+\definecolor{lightblue}{HTML}{EEF7FF}
+\definecolor{lightred}{HTML}{FFF1F3}
+\definecolor{lightgraybox}{HTML}{F6F7F9}
+\definecolor{darktext}{HTML}{222222}
+\AtBeginDocument{\hypersetup{colorlinks=true, linkcolor=mtcred, urlcolor=mtcred, citecolor=mtcred}}
 \pagestyle{fancy}
 \fancyhf{}
-\lhead{\small\sffamily n-step SAC final project}
-\rhead{\small\sffamily Radmir I.}
-\cfoot{\small\sffamily\thepage}
-\renewcommand{\headrulewidth}{0.3pt}
-\renewcommand{\footrulewidth}{0pt}
-
+\lhead{n-step SAC final project}
+\rhead{Radmir I.}
+\cfoot{\thepage}
+\setlength{\headheight}{14pt}
 \newtcolorbox{keybox}{
-  colback=PaleLavender,
-  colframe=MTCred,
-  boxrule=0.8pt,
-  arc=2mm,
-  left=2.5mm,
-  right=2.5mm,
-  top=2mm,
-  bottom=2mm,
-  fontupper=\small
+  colback=lightblue,
+  colframe=mtcred!70!black,
+  boxrule=0.6pt,
+  arc=3mm,
+  left=2mm,
+  right=2mm,
+  top=1mm,
+  bottom=1mm
 }
-
-\newtcolorbox{resultbox}{
-  colback=PaleBlue,
-  colframe=RuleGray,
-  boxrule=0.5pt,
-  arc=2mm,
-  left=2.5mm,
-  right=2.5mm,
-  top=2mm,
-  bottom=2mm,
-  fontupper=\small
+\newtcolorbox{notegray}{
+  colback=lightgraybox,
+  colframe=black!15,
+  boxrule=0.4pt,
+  arc=3mm,
+  left=2mm,
+  right=2mm,
+  top=1mm,
+  bottom=1mm
 }
-
 \newtcolorbox{warningbox}{
-  colback=CodeBg,
-  colframe=SoftGray,
-  boxrule=0.5pt,
-  arc=2mm,
-  left=2.5mm,
-  right=2.5mm,
-  top=2mm,
-  bottom=2mm,
-  fontupper=\small
+  colback=lightred,
+  colframe=mtcred,
+  boxrule=0.6pt,
+  arc=3mm,
+  left=2mm,
+  right=2mm,
+  top=1mm,
+  bottom=1mm
 }
+\captionsetup{font=small, labelfont=bf}
 
-\renewcommand{\arraystretch}{1.18}
-\setlength{\parskip}{0.45em}
-\setlength{\parindent}{0pt}
-\setlength{\emergencystretch}{3em}
+\setlength{\cftsecnumwidth}{3em}
+\setlength{\cftsubsecnumwidth}{3.5em}
