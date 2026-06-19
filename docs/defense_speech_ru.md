@@ -1,65 +1,41 @@
-# Текст защиты на 5-7 минут
+# Текст защиты на 5–7 минут — финальная живая версия
 
 Здравствуйте. Я расскажу про проект **Stress-Testing n-step Soft Actor-Critic under Limited Compute**.
 
-Идея проекта была не в том, чтобы предложить новый state-of-the-art алгоритм, а в том, чтобы взять одну конкретную идею из свежих работ про n-step SAC и проверить её на небольшом, но воспроизводимом эксперименте.
+Я сразу ограничил проект: я не делал новый алгоритм и не пытался заявить SOTA. Я проверял один конкретный механизм — что происходит с SAC, если заменить обычный 1-step critic target на n-step target.
 
-Главный вопрос был такой: **помогают ли n-step returns алгоритму Soft Actor-Critic при ограниченном compute, и где увеличение горизонта начинает вредить?**
+Главный вопрос простой: **помогают ли n-step returns алгоритму SAC при ограниченном compute, и где увеличение горизонта начинает вредить?**
 
-Soft Actor-Critic - это сильный off-policy actor-critic алгоритм для continuous control. У него есть replay buffer, stochastic actor, twin critics, target networks и entropy regularization. В стандартном SAC critic обычно обучается по 1-step target: мы берём один reward, потом bootstrap от следующего состояния.
+SAC — сильный off-policy actor-critic алгоритм для continuous control. В нём есть replay buffer, stochastic actor, twin critics, target networks и entropy regularization. В стандартной версии critic обычно обучается по 1-step target: один reward, потом bootstrap от следующего состояния.
 
-Это достаточно стабильно, но у такого подхода есть проблема: reward information распространяется назад довольно медленно. Если полезное действие влияет на награду через несколько шагов, 1-step target может обучаться не очень sample-efficient.
+Это устойчиво, но reward information идёт назад медленно. Если полезное действие влияет на награду через несколько шагов, 1-step target может быть менее sample-efficient.
 
-N-step returns предлагают простую идею: вместо одного reward перед bootstrap мы накапливаем несколько rewards. Например, для `n=3` target содержит `r_t`, `gamma r_{t+1}`, `gamma^2 r_{t+2}`, и только потом bootstrap от состояния `s_{t+3}`. Интуитивно это должно быстрее передавать информацию о награде назад.
+N-step return делает target более длинным. Например, при `n=3` мы берём `r_t`, `gamma r_{t+1}`, `gamma^2 r_{t+2}` и только потом bootstrap от `s_{t+3}`. Интуиция такая: reward signal быстрее доходит до более ранних действий.
 
-Но в SAC есть важная сложность: SAC - off-policy алгоритм. Траектории лежат в replay buffer и могли быть собраны старой политикой. Поэтому чем длиннее n-step fragment, тем больше риск off-policy bias и target variance. То есть n-step horizon - это не просто “чем больше, тем лучше”. Это параметр стабильности.
+Но в SAC есть важная проблема: это off-policy алгоритм. Фрагменты в replay buffer могли быть собраны старой policy. Поэтому чем длиннее n-step fragment, тем выше риск off-policy bias и target variance. То есть horizon — не ручка “сделать больше”. Это параметр стабильности.
 
-В литературе это связано с работами по SACn и T-SAC. SACn как раз мотивирован тем, что n-step returns в off-policy SAC не так просто использовать наивно. T-SAC идёт дальше и использует trajectory chunks и sequence-aware critic. Я не воспроизводил полный T-SAC, потому что это уже более тяжёлая архитектура и больше compute. Мой проект - это bounded reproduction и ablation study центрального механизма: что будет, если в SAC поменять critic target horizon.
+По литературе проект стоит рядом с SACn и T-SAC. SACn как раз обсуждает, почему n-step returns в off-policy SAC не так просто использовать наивно. T-SAC идёт дальше и использует trajectory chunks и sequence-aware critic. Я не воспроизводил полный T-SAC: для этого нужно больше инженерии и compute. Я изолировал меньший общий механизм — horizon critic target.
 
-Я сравнивал три варианта:
+Я сравнивал три варианта: `SAC n=1` как baseline, `SAC n=3` как умеренный horizon и `SAC n=5` как более рискованный target.
 
-- `SAC n=1` - стандартный baseline.
-- `SAC n=3` - умеренный n-step horizon.
-- `SAC n=5` - более длинный, потенциально рискованный horizon.
+В коде основной SAC pipeline остаётся прежним. Главное изменение происходит перед replay buffer. Я добавил n-step buffer: он хранит короткую очередь transitions и строит aggregated transition — накопленный reward, discount, next state и done flag. Если episode закончился раньше, окно обрывается. После этого critic target имеет вид: `reward_n + discount_n * target_value(next_state)`. При `n=1` это превращается в обычный SAC.
 
-Код устроен довольно компактно. Основной SAC pipeline остаётся тем же: environment step, replay buffer, critic update, actor update, alpha update, target network update, periodic evaluation. Главное изменение находится перед replay buffer: я добавил n-step buffer, который хранит короткую очередь переходов и строит aggregated transition.
+Эксперименты были на двух средах. `Pendulum-v1` — проверочный эксперимент: убедиться, что код живой и n-step target не ломает SAC на простой задаче. `HalfCheetah-v5` — основной benchmark.
 
-Для каждого такого перехода он считает накопленный reward, discount, next state и done flag. Если эпизод закончился раньше, n-step window обрывается. После этого aggregated transition кладётся в replay buffer, и critic update использует target вида:
+На Pendulum все три варианта обучились и пришли к близкому качеству. Я не делаю из этого сильного вывода. Это именно sanity check.
 
-`reward_n + discount_n * target_value(next_state)`.
+Главный результат — HalfCheetah. При 100 тысячах environment steps и seed 0 получилось так: `SAC n=1` дал final return около **4354**, `SAC n=3` — около **4579**, а `SAC n=5` — около **764**, best около **833**.
 
-При `n=1` это сводится к обычному SAC.
+В этом конкретном single-seed run `n=3` оказался лучше: он раньше дошёл до сильного поведения и дал лучший final return. Но я не утверждаю, что `n=3` всегда лучше. Корректный вывод уже: **в этой постановке moderate horizon помог, а naive `n=5` провалился при тех же hyperparameters**.
 
-Экспериментально я использовал две среды. `Pendulum-v1` - как дешёвый sanity check, чтобы проверить, что реализация вообще работает. И `HalfCheetah-v5` - как основной continuous-control benchmark.
+Самое полезное здесь даже не победа `n=3`, а failure mode `n=5`. Он показывает, что длинный n-step target может не улучшить SAC, а сделать обучение хуже, если использовать его наивно и без correction mechanisms.
 
-На `Pendulum-v1` я запускал `n=1`, `n=3`, `n=5` на 30 тысяч environment steps. Все три варианта обучились и пришли к похожему final return. Для меня это не главный результат, а именно sanity check: он показывает, что n-step target construction не ломает SAC на простой среде.
+Я специально держал одинаковые hyperparameters для `n=1`, `n=3` и `n=5`, чтобы менялся только horizon critic target. Это делает ablation чище, но может быть не полностью справедливо к `n=5`. Возможно, ему нужны другие learning rates, entropy settings или replay настройки. Поэтому результат лучше читать как evidence of horizon sensitivity, а не как доказательство против 5-step SAC вообще.
 
-Главный результат получился на `HalfCheetah-v5`. Там я запускал все три варианта на 100 тысяч environment steps, seed 0. Результаты такие:
+Главные ограничения: один seed, две среды, нет SACn-style correction, нет sequence-aware critic как в T-SAC, нет отдельного tuning для каждого horizon. В текущей версии stability я оцениваю по return curves и failure mode, а не по полной диагностике Q-values, entropy и critic loss. Это я бы добавил в следующей версии.
 
-- `SAC n=1` получил final eval return около **4354**.
-- `SAC n=3` получил около **4579**.
-- `SAC n=5` получил только около **764**, best return около **833**.
+Если продолжать проект, я бы сначала добил статистику: 3–5 seeds, confidence intervals, ещё Hopper или Walker2d. Потом — сравнение naive n-step SAC с SACn-style correction и, возможно, sequence-aware critic.
 
-То есть `n=3` оказался лучшим в этом эксперименте: он быстрее перешёл к сильному поведению и дал лучший final return. `n=1` остался сильным baseline, он тоже хорошо обучился, но медленнее. А `n=5` фактически не научился нормально бежать.
-
-Для меня самый интересный результат здесь - не просто то, что `n=3` лучше. Самый интересный результат - это провал `n=5`. Он показывает, что увеличение n-step horizon действительно может ломать обучение в off-policy SAC, если делать это наивно и без дополнительных correction mechanisms.
-
-Я специально держал одинаковые hyperparameters для `n=1`, `n=3` и `n=5`, чтобы сравнение было чистым: менялся только horizon critic target. Это, конечно, может быть не идеально справедливо к `n=5`, потому что ему, возможно, нужны другие learning rates или entropy settings. Но именно это и показывает чувствительность метода: длинный horizon не является бесплатным улучшением.
-
-Главный вывод проекта такой:
-
-**Moderate n-step credit assignment can help SAC sample efficiency, but a longer naive n-step target can become unstable or ineffective in off-policy SAC.**
-
-Или проще: **n-step horizon - это stability parameter, а не “bigger is better knob”.**
-
-Теперь про ограничения. Самое важное ограничение - это single seed. Я не утверждаю, что `n=3` всегда лучше `n=1`, и не утверждаю, что `n=5` всегда проваливается. Корректная формулировка уже: в моём limited-compute single-seed ablation на HalfCheetah `n=3` сработал лучше baseline, а `n=5` провалился при тех же hyperparameters.
-
-Также у меня только две среды, нет полного SACn correction mechanism, нет transformer critic как в T-SAC, и нет отдельного hyperparameter tuning для каждого horizon. Это не paper-scale benchmark, а учебный reproducible ablation project.
-
-Но зато в проекте есть полный воспроизводимый pipeline: configs, raw CSV logs, plots, summary table, README, final summary, limitations, презентация и код. То есть можно посмотреть не только финальные цифры, но и learning curves, исходные логи и реализацию n-step buffer.
-
-Если бы я продолжал проект, я бы в первую очередь добавил 3-5 seeds, confidence intervals и ещё несколько MuJoCo environments, например Hopper или Walker2d. Следующий шаг после этого - сравнить naive n-step SAC с SACn-style correction или попробовать sequence-aware critic, ближе к идее T-SAC.
-
-Итог: я не пытался доказать новый алгоритм. Я проверил конкретный механизм, получил понятный trade-off и показал failure mode. На простой среде все варианты сходятся, а на HalfCheetah видно, что умеренный `n=3` помогает, а более длинный naive `n=5` становится нестабильным.
+Итог: я проверил конкретный механизм, получил понятный trade-off и честно ограничил вывод. **N-step horizon в SAC — это stability parameter, а не bigger-is-better knob.**
 
 Спасибо, готов ответить на вопросы.
